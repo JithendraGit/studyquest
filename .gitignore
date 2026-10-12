@@ -1,6 +1,5 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.*
@@ -8,34 +7,70 @@
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
+!.yarn/sdks
 !.yarn/versions
+jspm_packages/
+bower_components/
+.pnpm-store/
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs and diagnostics
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-# env files (can opt-in for committing if needed)
+# Next.js
+/.next/
+/out/
+
+# Other build output and caches
+/build
+dist/
+.nuxt/
+.output/
+.cache/
+.parcel-cache/
+.svelte-kit/
+.vuepress/dist/
+.temp/
+**/.vitepress/dist
+**/.vitepress/cache
+.docusaurus/
+.serverless/
+.fusebox/
+.dynamodb/
+.firebase/
+.astro/
+.turbo/
+.vite/
+coverage/
+.nyc_output/
+*.lcov
+
+# Environment variables and secrets
 .env*
+!.env.example
 
-# vercel
-.vercel
-
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Miscellaneous
+.DS_Store
+*.pem
+.vercel
+.vscode-test
+.node_repl_history
+.tern-port
+.grunt
+lib-cov
+.lock-wscript
+build/Release
+web_modules/
+.pnp.*
+.yarn-integrity
+.cache/
+.parcel-cache/
