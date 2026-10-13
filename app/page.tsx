@@ -28,7 +28,6 @@ const journey = [
 
 export default function Home() {
   const [progress, setProgress] = useState(0);
-  const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -41,7 +40,6 @@ export default function Home() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-            if (entry.target.id === "research") setShowIntro(true);
           }
         });
       },
