@@ -9,6 +9,8 @@ const steps = [
 ];
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
   const [task, setTask] = useState("");
   const [subject, setSubject] = useState("Any subject");
   const [started, setStarted] = useState(false);
@@ -16,6 +18,17 @@ export default function Home() {
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState<number[]>([]);
   const [showPlan, setShowPlan] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading) return;
+    const startedAt = Date.now();
+    const id = window.setInterval(() => {
+      const elapsed = Date.now() - startedAt;
+      setLoadProgress(Math.min(100, Math.round((elapsed / 2100) * 100)));
+      if (elapsed >= 2400) setIsLoading(false);
+    }, 50);
+    return () => window.clearInterval(id);
+  }, [isLoading]);
 
   useEffect(() => {
     if (!running || seconds <= 0) return;
@@ -34,6 +47,8 @@ export default function Home() {
 
   return (
     <main className="sq-app">
+      {isLoading && <div className="game-loader" role="dialog" aria-label="StudyQuest loading screen"><div className="loader-top"><span className="loader-mark">sq<span>✳</span></span><span>STUDYQUEST</span><span className="loader-version">YOUR NEXT MOVE AWAITS</span></div><div className="loader-scene" aria-hidden="true"><div className="loader-window"><i /><i /><i /><i /></div><div className="loader-shelf" /><div className="loader-book book-one" /><div className="loader-book book-two" /><div className="loader-book book-three" /><div className="loader-pencil" /><div className="loader-paper"><span>TONIGHT'S PLAN</span><i /><i /><i /><b>ONE STEP AT A TIME</b></div><div className="loader-path"><span /><span /><span /><span /></div><div className="loader-spark spark-one">✳</div><div className="loader-spark spark-two">✦</div></div><div className="loader-bottom"><div><p className="loader-kicker">EVERY QUEST BEGINS SOMEWHERE</p><h2>Make room<br />for <em>one small win.</em></h2><p className="loader-copy">Take a breath. Pick a starting point. The rest can wait a moment.</p></div><div className="loader-progress-area"><div className="loader-progress-label"><span>{loadProgress < 100 ? "PREPARING YOUR STUDY SPACE" : "READY WHEN YOU ARE"}</span><span>{loadProgress}%</span></div><div className="loader-track"><span style={{width: `${loadProgress}%`}} /></div><button className="loader-enter" onClick={() => setIsLoading(false)}>Enter StudyQuest <span>↗</span></button><p className="loader-tip">TIP · You only need to know your next step.</p></div></div><div className="loader-footer"><span>STUDYQUEST</span><span>START SMALL. KEEP GOING.</span><span>✳</span></div></div>}
+
       <header className="sq-nav">
         <a className="sq-brand" href="#home" aria-label="StudyQuest home"><span className="sq-brand-icon">s<span>q</span></span><span>studyquest</span></a>
         <div className="sq-nav-center"><span className="nav-spark">✳</span> YOUR STUDY, ONE MOVE AT A TIME</div>
@@ -55,7 +70,7 @@ export default function Home() {
           <svg className="world-path" viewBox="0 0 600 650" preserveAspectRatio="none" aria-hidden="true"><path d="M295 650 C260 580 390 555 340 500 S180 430 260 370 S420 300 350 250 S250 185 300 120" /><circle cx="295" cy="650" r="7" /><circle cx="340" cy="500" r="7" /><circle cx="260" cy="370" r="7" /><circle cx="350" cy="250" r="7" /><circle cx="300" cy="120" r="9" /></svg>
           <div className="world-marker marker-one"><span>YOU ARE HERE</span><b>Start small</b></div>
           <div className="world-marker marker-two"><span>YOUR NEXT STOP</span><b>One question</b></div>
-          <div className="world-sign">NO NEED TO<br /><strong>SEE IT ALL.</strong></div>
+          <div className="world-sign">YOUR STUDY PATH<br /><strong>ONE STEP AT A TIME.</strong></div>
           <div className="world-coordinates">YOUR QUEST MAP <span>001</span></div>
         </div>
       </section>
@@ -78,7 +93,7 @@ export default function Home() {
 
       <section className="sq-console" id="quest-console">
         <div className="section-rail section-rail-light"><span>02</span><span>YOUR QUEST</span><i /></div>
-        <div className="console-heading"><div><p className="sq-kicker">A LITTLE MOMENT OF MOMENTUM</p><h2>Make a move.<br /><em>Change the map.</em></h2></div><p>Progress isn't finishing everything. It's doing the next useful thing.</p></div>
+        <div className="console-heading"><div><p className="sq-kicker">A SIMPLE WAY TO GET STARTED</p><h2>Make a move.<br /><em>Change the map.</em></h2></div><p>Progress isn't finishing everything. It's doing the next useful thing.</p></div>
         <div className="quest-console-grid">
           <div className="quest-panel">
             <div className="panel-top"><span>ACTIVE QUEST</span><span className={started ? "quest-chip active" : "quest-chip"}>{started ? "IN PLAY" : "READY WHEN YOU ARE"}</span></div>
@@ -100,7 +115,7 @@ export default function Home() {
 
       <section className="sq-research" id="why">
         <div className="section-rail"><span>03</span><span>THE THINKING BEHIND IT</span><i /></div>
-        <div className="research-grid"><div><p className="sq-kicker">GAME DESIGN, WITH A PURPOSE</p><h2>Make the next step<br /><em>easier to see.</em></h2><p className="research-lede">Game elements can help make goals and progress visible. But they only matter when they support the learning itself.</p><a className="research-citation" href="https://doi.org/10.1111/bjet.13471" target="_blank" rel="noreferrer"><span>READ THE RESEARCH</span><b>Zeng et al. · 2024 meta-analysis ↗</b></a></div><div className="research-card"><div className="research-card-top"><span>RESEARCH NOTE 001</span><span>EDUCATIONAL GAMIFICATION</span></div><strong className="research-number">22</strong><h3>experimental studies reviewed</h3><div className="research-rule" /><p>A 2024 meta-analysis reported a positive overall effect of gamification on academic performance. The studies differed, so this is a reason to explore thoughtful design, not a guarantee that every game works for every student.</p><div className="research-card-foot"><span>LEARNING FIRST</span><span>PROGRESS WITH PURPOSE ✳</span></div></div></div>
+        <div className="research-grid"><div><p className="sq-kicker">GAME DESIGN, WITH A PURPOSE</p><h2>Make the next step<br /><em>easier to see.</em></h2><p className="research-lede">Game elements can help make goals and progress visible. But they only matter when they support the learning itself.</p><a className="research-citation" href="https://doi.org/10.1111/bjet.13471" target="_blank" rel="noreferrer"><span>READ THE RESEARCH</span><b>Zeng et al. · 2024 meta-analysis ↗</b></a></div><div className="research-card"><div className="research-card-top"><span>RESEARCH NOTE 001</span><span>EDUCATIONAL GAMIFICATION</span></div><strong className="research-number">22</strong><h3>experimental studies reviewed</h3><div className="research-rule" /><p>A 2024 meta-analysis of 22 experimental studies found a positive average effect of gamification on academic performance. The studies varied, and that result does not prove every game helps every learner.</p><div className="research-card-foot"><span>LEARNING FIRST</span><span>PROGRESS WITH PURPOSE ✳</span></div></div></div>
       </section>
 
       <footer className="sq-footer"><a className="sq-brand footer-brand" href="#home"><span className="sq-brand-icon">s<span>q</span></span><span>studyquest</span></a><p>Start where you are. The next step is enough.</p><a href="#home">BACK TO THE BEGINNING ↑</a></footer>
