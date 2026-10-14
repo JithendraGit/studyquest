@@ -1,69 +1,124 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+
+const steps = [
+  { title: "Set the scene", detail: "Put your notes where you can reach them.", icon: "01" },
+  { title: "Find one question", detail: "Choose a single problem or idea to work on.", icon: "02" },
+  { title: "Try before you check", detail: "Give it a real attempt, then review what you missed.", icon: "03" },
+];
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [task, setTask] = useState("");
+  const [subject, setSubject] = useState("Any subject");
+  const [started, setStarted] = useState(false);
+  const [seconds, setSeconds] = useState(300);
+  const [running, setRunning] = useState(false);
+  const [done, setDone] = useState<number[]>([]);
+  const [showPlan, setShowPlan] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading) return;
+    const startedAt = Date.now();
+    const id = window.setInterval(() => {
+      const elapsed = Date.now() - startedAt;
+      setLoadProgress(Math.min(100, Math.round((elapsed / 2100) * 100)));
+      if (elapsed >= 2400) setIsLoading(false);
+    }, 50);
+    return () => window.clearInterval(id);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (!running || seconds <= 0) return;
+    const id = window.setInterval(() => setSeconds((value) => Math.max(0, value - 1)), 1000);
+    return () => window.clearInterval(id);
+  }, [running, seconds]);
+
+  const clock = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+  const completed = done.length;
+  const beginQuest = () => {
+    setTask(task.trim() || "Review one topic");
+    setShowPlan(true);
+    setStarted(true);
+    document.getElementById("quest-console")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="sq-app">
+      {isLoading && <div className="game-loader" role="dialog" aria-label="StudyQuest loading screen"><div className="loader-top"><span className="loader-mark">sq<span>✳</span></span><span>STUDYQUEST</span><span className="loader-version">YOUR NEXT MOVE AWAITS</span></div><div className="loader-scene" aria-hidden="true"><div className="loader-window"><i /><i /><i /><i /></div><div className="loader-shelf" /><div className="loader-book book-one" /><div className="loader-book book-two" /><div className="loader-book book-three" /><div className="loader-pencil" /><div className="loader-paper"><span>TONIGHT'S PLAN</span><i /><i /><i /><b>ONE STEP AT A TIME</b></div><div className="loader-path"><span /><span /><span /><span /></div><div className="loader-spark spark-one">✳</div><div className="loader-spark spark-two">✦</div></div><div className="loader-bottom"><div><p className="loader-kicker">EVERY QUEST BEGINS SOMEWHERE</p><h2>Make room<br />for <em>one small win.</em></h2><p className="loader-copy">Take a breath. Pick a starting point. The rest can wait a moment.</p></div><div className="loader-progress-area"><div className="loader-progress-label"><span>{loadProgress < 100 ? "PREPARING YOUR STUDY SPACE" : "READY WHEN YOU ARE"}</span><span>{loadProgress}%</span></div><div className="loader-track"><span style={{width: `${loadProgress}%`}} /></div><button className="loader-enter" onClick={() => setIsLoading(false)}>Enter StudyQuest <span>↗</span></button><p className="loader-tip">TIP · You only need to know your next step.</p></div></div><div className="loader-footer"><span>STUDYQUEST</span><span>START SMALL. KEEP GOING.</span><span>✳</span></div></div>}
+
+      <header className="sq-nav">
+        <a className="sq-brand" href="#home" aria-label="StudyQuest home"><span className="sq-brand-icon">s<span>q</span></span><span>studyquest</span></a>
+        <div className="sq-nav-center"><span className="nav-spark">✳</span> YOUR STUDY, ONE MOVE AT A TIME</div>
+        <a className="sq-nav-link" href="#why">Why it works <span>↗</span></a>
+      </header>
+
+      <section className="sq-hero" id="home">
+        <div className="sq-hero-copy">
+          <div className="sq-kicker"><span className="live-dot" /> YOUR NEXT CHAPTER STARTS HERE</div>
+          <h1>You don't need<br />the whole plan.<br /><em>Just the next move.</em></h1>
+          <p className="sq-lede">That assignment you've been putting off? It doesn't have to be finished right now. It just has to become something you can start.</p>
+          <a className="sq-primary" href="#start">Choose your first move <span>↘</span></a>
+          <div className="sq-hero-foot"><span>01 / BEGIN</span><span>SMALL STEPS COUNT</span></div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="sq-world" aria-label="Illustrated study world with a path leading toward a lit window">
+          <div className="world-sky"><span className="world-star star-a">✳</span><span className="world-star star-b">·</span><span className="world-star star-c">✦</span><div className="world-moon" /></div>
+          <div className="world-window"><div className="window-glow" /><div className="window-cross cross-v" /><div className="window-cross cross-h" /></div>
+          <div className="world-hill hill-back" /><div className="world-hill hill-mid" /><div className="world-hill hill-front" />
+          <svg className="world-path" viewBox="0 0 600 650" preserveAspectRatio="none" aria-hidden="true"><path d="M295 650 C260 580 390 555 340 500 S180 430 260 370 S420 300 350 250 S250 185 300 120" /><circle cx="295" cy="650" r="7" /><circle cx="340" cy="500" r="7" /><circle cx="260" cy="370" r="7" /><circle cx="350" cy="250" r="7" /><circle cx="300" cy="120" r="9" /></svg>
+          <div className="world-marker marker-one"><span>YOU ARE HERE</span><b>Start small</b></div>
+          <div className="world-marker marker-two"><span>YOUR NEXT STOP</span><b>One question</b></div>
+          <div className="world-sign">YOUR STUDY PATH<br /><strong>ONE STEP AT A TIME.</strong></div>
+          <div className="world-coordinates">YOUR QUEST MAP <span>001</span></div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="sq-start" id="start">
+        <div className="section-rail"><span>01</span><span>THE STARTING POINT</span><i /></div>
+        <div className="start-grid">
+          <div className="start-copy"><p className="sq-kicker">LET'S MAKE IT SMALLER</p><h2>What's the thing<br />you keep <em>putting off?</em></h2><p>Don't plan your whole evening. Name one thing you want to make a little progress on. We'll turn it into a short quest.</p><div className="hand-note">One thing. That's enough. <span>↗</span></div></div>
+          <div className="task-board">
+            <div className="board-top"><span><i /> QUEST BOARD</span><span>YOUR SPACE</span></div>
+            <label className="field-label" htmlFor="task">THE TASK ON YOUR MIND</label>
+            <textarea id="task" value={task} onChange={(e) => setTask(e.target.value)} placeholder="e.g. understand quadratic equations…" rows={2} maxLength={180} />
+            <label className="field-label" htmlFor="subject">WHAT ARE YOU WORKING ON?</label>
+            <select id="subject" value={subject} onChange={(e) => setSubject(e.target.value)}><option>Any subject</option><option>Math</option><option>Science</option><option>Reading</option><option>Writing</option><option>Computer science</option><option>History</option><option>Other</option></select>
+            <button className="sq-primary board-button" onClick={beginQuest}>Build my first quest <span>↗</span></button>
+            <div className="board-bottom"><span>NO PERFECT PLAN NEEDED</span><span>JUST A BEGINNING</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="sq-console" id="quest-console">
+        <div className="section-rail section-rail-light"><span>02</span><span>YOUR QUEST</span><i /></div>
+        <div className="console-heading"><div><p className="sq-kicker">A SIMPLE WAY TO GET STARTED</p><h2>Make a move.<br /><em>Change the map.</em></h2></div><p>Progress isn't finishing everything. It's doing the next useful thing.</p></div>
+        <div className="quest-console-grid">
+          <div className="quest-panel">
+            <div className="panel-top"><span>ACTIVE QUEST</span><span className={started ? "quest-chip active" : "quest-chip"}>{started ? "IN PLAY" : "READY WHEN YOU ARE"}</span></div>
+            <div className="quest-title-row"><div className="quest-emblem">✳</div><div><span className="task-subject">{subject.toUpperCase()}</span><h3>{started ? task : "Your first small step"}</h3></div></div>
+            <p className="quest-prompt">{started ? "Here's a way into it. Check off each move as you go. You can adapt the plan to fit your actual assignment." : "Build your quest above, then come back here. Or use this starter plan to get moving now."}</p>
+            <div className="step-list">{steps.map((step, index) => <button key={step.icon} className={done.includes(index) ? "quest-step step-done" : "quest-step"} onClick={() => setDone((old) => old.includes(index) ? old.filter((n) => n !== index) : [...old, index])}><span className="step-check">{done.includes(index) ? "✓" : step.icon}</span><span className="step-words"><b>{step.title}</b><small>{step.detail}</small></span><span className="step-arrow">{done.includes(index) ? "DONE" : "＋"}</span></button>)}</div>
+            <div className="quest-progress-label"><span>YOUR MOMENTUM</span><span>{completed} OF 3 MOVES</span></div><div className="quest-progress-track"><span style={{ width: `${completed / 3 * 100}%` }} /></div>
+            {completed === 3 && <div className="completion-note" role="status"><span>✦</span><div><b>Quest checkpoint reached.</b><p>You made space for the work. Choose your next question when you're ready.</p></div></div>}
+          </div>
+          <div className="timer-panel">
+            <div className="timer-top"><span>THE FIVE-MINUTE START</span><span>FOCUS MODE</span></div>
+            <p className="timer-intro">No pressure to finish.<br />Just give it five minutes.</p>
+            <div className={seconds === 0 ? "timer-dial timer-finished" : "timer-dial"}><div className="timer-ring" /><span className="timer-time">{clock}</span><span className="timer-caption">{seconds === 0 ? "TIME WELL SPENT" : running ? "ONE THING AT A TIME" : "WHEN YOU'RE READY"}</span></div>
+            <div className="timer-actions"><button className="timer-main" onClick={() => { if (seconds === 0) setSeconds(300); setRunning((v) => seconds === 0 ? true : !v); }}>{seconds === 0 ? "Start another round ↗" : running ? "Pause the clock Ⅱ" : seconds === 300 ? "Start five minutes ↗" : "Keep going ↗"}</button><button className="timer-reset" onClick={() => { setRunning(false); setSeconds(300); }}>Reset</button></div>
+            <p className="timer-footnote">{seconds === 0 ? "You showed up. That counts." : "Put one problem in front of you. Let the rest wait."}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="sq-research" id="why">
+        <div className="section-rail"><span>03</span><span>THE THINKING BEHIND IT</span><i /></div>
+        <div className="research-grid"><div><p className="sq-kicker">GAME DESIGN, WITH A PURPOSE</p><h2>Make the next step<br /><em>easier to see.</em></h2><p className="research-lede">Game elements can help make goals and progress visible. But they only matter when they support the learning itself.</p><a className="research-citation" href="https://doi.org/10.1111/bjet.13471" target="_blank" rel="noreferrer"><span>READ THE RESEARCH</span><b>Zeng et al. · 2024 meta-analysis ↗</b></a></div><div className="research-card"><div className="research-card-top"><span>RESEARCH NOTE 001</span><span>EDUCATIONAL GAMIFICATION</span></div><strong className="research-number">22</strong><h3>experimental studies reviewed</h3><div className="research-rule" /><p>A 2024 meta-analysis of 22 experimental studies found a positive average effect of gamification on academic performance. The studies varied, and that result does not prove every game helps every learner.</p><div className="research-card-foot"><span>LEARNING FIRST</span><span>PROGRESS WITH PURPOSE ✳</span></div></div></div>
+      </section>
+
+      <footer className="sq-footer"><a className="sq-brand footer-brand" href="#home"><span className="sq-brand-icon">s<span>q</span></span><span>studyquest</span></a><p>Start where you are. The next step is enough.</p><a href="#home">BACK TO THE BEGINNING ↑</a></footer>
+    </main>
   );
 }
