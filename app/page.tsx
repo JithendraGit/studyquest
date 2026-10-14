@@ -2,137 +2,108 @@
 
 import { useEffect, useState } from "react";
 
-const chapters = [
-  {
-    id: 0,
-    label: "THE MOMENT BEFORE",
-    title: "The task is still a wall.",
-    copy: "A blank page. Ten tabs. A deadline somewhere in the back of your mind. The hardest part can be deciding where to begin.",
-    note: "Everything feels like it needs to happen at once.",
-  },
-  {
-    id: 1,
-    label: "THE FIRST MOVE",
-    title: "Make the first step tiny.",
-    copy: "Not the whole chapter. One question. One worked example. One small move that turns “later” into “started.”",
-    note: "You only need to decide what happens next.",
-  },
-  {
-    id: 2,
-    label: "THE QUEST TAKES SHAPE",
-    title: "Let progress become visible.",
-    copy: "A good game gives you a clear next move. Studying can start that way, too.",
-    note: "The point is progress you can actually use.",
-  },
+const steps = [
+  { title: "Set the scene", detail: "Put your notes where you can reach them.", icon: "01" },
+  { title: "Find one question", detail: "Choose a single problem or idea to work on.", icon: "02" },
+  { title: "Try before you check", detail: "Give it a real attempt, then review what you missed.", icon: "03" },
 ];
 
 export default function Home() {
-  const [progress, setProgress] = useState(0);
-  const [chapter, setChapter] = useState(0);
-  const [choice, setChoice] = useState<"later" | "start" | null>(null);
-  const [questStarted, setQuestStarted] = useState(false);
+  const [task, setTask] = useState("");
+  const [subject, setSubject] = useState("Any subject");
+  const [started, setStarted] = useState(false);
+  const [seconds, setSeconds] = useState(300);
+  const [running, setRunning] = useState(false);
+  const [done, setDone] = useState<number[]>([]);
+  const [showPlan, setShowPlan] = useState(false);
+
   useEffect(() => {
-    const updateProgress = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? Math.min(100, Math.round((window.scrollY / max) * 100)) : 0);
-    };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const value = entry.target.getAttribute("data-chapter");
-        if (value !== null) setChapter(Number(value));
-        entry.target.classList.add("is-visible");
-      });
-    }, { threshold: 0.45 });
-    document.querySelectorAll("[data-chapter], .reveal").forEach((node) => observer.observe(node));
-    window.addEventListener("scroll", updateProgress, { passive: true });
-    updateProgress();
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", updateProgress);
-    };
-  }, []);
+    if (!running || seconds <= 0) return;
+    const id = window.setInterval(() => setSeconds((value) => Math.max(0, value - 1)), 1000);
+    return () => window.clearInterval(id);
+  }, [running, seconds]);
+
+  const clock = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+  const completed = done.length;
+  const beginQuest = () => {
+    setTask(task.trim() || "Review one topic");
+    setShowPlan(true);
+    setStarted(true);
+    document.getElementById("quest-console")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
-    <main className={`site-shell chapter-${chapter}`}>
-      <div className="reading-progress" aria-hidden="true"><span style={{ transform: `scaleX(${progress, 100})` }} /></div>
-      <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="StudyQuest home"><span className="wordmark-mark">s<span>q</span></span><span>studyquest</span></a>
-        <nav aria-label="Main navigation"><a href="#friction">The feeling</a><a href="#research">The evidence</a><a href="#quest">The idea</a></nav>
-        <a className="header-cta" href="#quest">Find your next step <span>↗</span></a>
+    <main className="sq-app">
+      <header className="sq-nav">
+        <a className="sq-brand" href="#home" aria-label="StudyQuest home"><span className="sq-brand-icon">s<span>q</span></span><span>studyquest</span></a>
+        <div className="sq-nav-center"><span className="nav-spark">✳</span> YOUR STUDY, ONE MOVE AT A TIME</div>
+        <a className="sq-nav-link" href="#why">Why it works <span>↗</span></a>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-atmosphere" aria-hidden="true"><span className="ambient-orb orb-one" /><span className="ambient-orb orb-two" /><span className="ambient-grid" /></div>
-        <div className="hero-copy">
-          <p className="eyebrow"><span className="status-dot" /> A different way to approach studying</p>
-          <h1>The hardest level is often <em>getting started.</em></h1>
-          <p className="hero-description">That moment when you know you should study, but somehow everything else feels easier. StudyQuest is exploring a different way into that moment.</p>
-          <div className="hero-actions"><a className="button button-dark" href="#friction">Enter the story <span>↓</span></a><a className="text-link" href="#research">See what research says <span>↗</span></a></div>
-          <p className="hero-disclaimer">Start small. Keep going.</p>
+      <section className="sq-hero" id="home">
+        <div className="sq-hero-copy">
+          <div className="sq-kicker"><span className="live-dot" /> YOUR NEXT CHAPTER STARTS HERE</div>
+          <h1>Don't conquer<br />the whole mountain.<br /><em>Take the first step.</em></h1>
+          <p className="sq-lede">That assignment you've been putting off? It doesn't have to be finished right now. It just has to become something you can start.</p>
+          <a className="sq-primary" href="#start">Choose your first move <span>↘</span></a>
+          <div className="sq-hero-foot"><span>01 / BEGIN</span><span>SMALL STEPS COUNT</span></div>
         </div>
-        <div className="hero-visual" aria-label="Illustration of a study desk becoming a game path">
-          <div className="hero-scene">
-            <div className="scene-sun" />
-            <div className="scene-window"><span /><span /><span /></div>
-            <div className="scene-shelf" />
-            <div className="scene-lamp"><i /><b /></div>
-            <div className="scene-desk" />
-            <div className="scene-paper paper-back" /><div className="scene-paper paper-front"><span className="paper-line long" /><span className="paper-line" /><span className="paper-line short" /><span className="paper-check">✓</span></div>
-            <div className="scene-pencil" />
-            <div className="scene-path"><span /><span /><span /></div>
-            <div className="scene-label label-one">THE FIRST STEP</div><div className="scene-label label-two">YOUR NEXT MOVE ↗</div>
-            <div className="scene-caption"><span>STUDYQUEST</span><span>BEGIN WHERE YOU ARE</span></div>
-          </div>
-          <div className="scene-stamp"><span>MAKE</span><strong>ONE</strong><span>MOVE</span></div>
+        <div className="sq-world" aria-label="Illustrated study landscape with a path leading toward a lit window">
+          <div className="world-sky"><span className="world-star star-a">✳</span><span className="world-star star-b">·</span><span className="world-star star-c">✦</span><div className="world-moon" /></div>
+          <div className="world-window"><div className="window-glow" /><div className="window-cross cross-v" /><div className="window-cross cross-h" /></div>
+          <div className="world-hill hill-back" /><div className="world-hill hill-mid" /><div className="world-hill hill-front" />
+          <svg className="world-path" viewBox="0 0 600 650" preserveAspectRatio="none" aria-hidden="true"><path d="M295 650 C260 580 390 555 340 500 S180 430 260 370 S420 300 350 250 S250 185 300 120" /><circle cx="295" cy="650" r="7" /><circle cx="340" cy="500" r="7" /><circle cx="260" cy="370" r="7" /><circle cx="350" cy="250" r="7" /><circle cx="300" cy="120" r="9" /></svg>
+          <div className="world-marker marker-one"><span>YOU ARE HERE</span><b>Start small</b></div>
+          <div className="world-marker marker-two"><span>YOUR NEXT STOP</span><b>One question</b></div>
+          <div className="world-sign">NO NEED TO<br /><strong>SEE IT ALL.</strong></div>
+          <div className="world-coordinates">STUDYQUEST FIELD NOTES <span>001</span></div>
         </div>
-        <a className="scroll-cue" href="#friction"><span className="scroll-cue-line" /> Scroll to enter</a>
       </section>
 
-      <section className="friction-section" id="friction">
-        <div className="section-label reveal"><span>01, THE FAMILIAR FEELING</span><span>THE MOMENT BEFORE YOU BEGIN</span></div>
-        <div className="friction-intro reveal"><p className="eyebrow">YOU KNOW THE LOOP</p><h2>“I’ll start in<br /><em>five minutes.”</em></h2><p>And then the evening disappears. The task may matter to you, but starting it still feels strangely difficult.</p></div>
-        <div className="choice-stage reveal">
-          <div className="choice-copy"><span className="stage-number">TRY IT FOR YOURSELF</span><h3>Your assignment is waiting.</h3><p>You have a chapter to review. You don’t need to finish it right now. You just need to choose what happens next.</p></div>
-          <div className="choice-card">
-            <div className="choice-card-top"><span>TONIGHT'S QUEST</span><span className="quest-status"><i /> NOT STARTED</span></div>
-            <div className="quest-paper"><span className="paper-overline">TONIGHT’S TASK</span><strong>Review one chapter</strong><span className="quest-detail">Estimated time: your call</span><div className="task-scribble" aria-hidden="true">?</div></div>
-            <p className="choice-question">What would you do?</p>
-            <div className="choice-actions"><button className={choice === "later" ? "choice-button selected" : "choice-button"} onClick={() => { setChoice("later"); setQuestStarted(false); }}><span>↻</span><span><b>Maybe later</b><small>Leave it for later</small></span></button><button className={choice === "start" ? "choice-button selected" : "choice-button"} onClick={() => { setChoice("start"); setQuestStarted(true); }}><span>↗</span><span><b>Start with one question</b><small>Turn it into one action</small></span></button></div>
-            {choice && <div className={`choice-feedback ${choice}`} aria-live="polite">{choice === "later" ? <><strong>The task is still waiting.</strong><span>No guilt. Try making the task smaller: open your notes, find one question, or work for just five minutes.</span></> : <><strong>{questStarted ? "Quest started: one question." : "Ready when you are."}</strong><span>You do not need to finish everything right now. Pick one question and give it five focused minutes.</span><span className="mini-progress"><i /></span></>}</div>}
+      <section className="sq-start" id="start">
+        <div className="section-rail"><span>01</span><span>THE STARTING POINT</span><i /></div>
+        <div className="start-grid">
+          <div className="start-copy"><p className="sq-kicker">LET'S MAKE IT SMALLER</p><h2>What's the thing<br />you keep <em>putting off?</em></h2><p>Don't plan your whole evening. Name one thing you want to make a little progress on. We'll turn it into a short quest.</p><div className="hand-note">One thing. That's enough. <span>↗</span></div></div>
+          <div className="task-board">
+            <div className="board-top"><span><i /> QUEST BOARD</span><span>YOUR SPACE</span></div>
+            <label className="field-label" htmlFor="task">THE TASK ON YOUR MIND</label>
+            <textarea id="task" value={task} onChange={(e) => setTask(e.target.value)} placeholder="e.g. understand quadratic equations…" rows={2} maxLength={180} />
+            <label className="field-label" htmlFor="subject">WHAT ARE YOU WORKING ON?</label>
+            <select id="subject" value={subject} onChange={(e) => setSubject(e.target.value)}><option>Any subject</option><option>Math</option><option>Science</option><option>Reading</option><option>Writing</option><option>Computer science</option><option>History</option><option>Other</option></select>
+            <button className="sq-primary board-button" onClick={beginQuest}>Build my first quest <span>↗</span></button>
+            <div className="board-bottom"><span>NO PERFECT PLAN NEEDED</span><span>JUST A BEGINNING</span></div>
           </div>
         </div>
-        
       </section>
 
-      <section className="scroll-story" aria-label="The StudyQuest concept">
-        <div className="story-sticky">
-          <div className="story-backdrop" aria-hidden="true"><div className="story-moon" /><div className="story-horizon" /><div className="story-terrain terrain-back" /><div className="story-terrain terrain-front" /><svg viewBox="0 0 600 480" className="story-route" role="presentation"><path d="M60 405 C90 340 150 375 190 300 S270 250 300 205 S380 170 410 115 S485 100 535 42" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="3 9" strokeLinecap="round" /><circle cx="60" cy="405" r="7" /><circle cx="190" cy="300" r="7" /><circle cx="300" cy="205" r="7" /><circle cx="410" cy="115" r="7" /><circle cx="535" cy="42" r="9" /></svg><div className="story-landmark landmark-one">BEGIN</div><div className="story-landmark landmark-two">PRACTICE</div><div className="story-landmark landmark-three">LEVEL UP</div></div>
-          <div className="story-overlay"><span>STUDYQUEST, THE JOURNEY</span><span>FOLLOW THE PATH</span></div>
+      <section className="sq-console" id="quest-console">
+        <div className="section-rail section-rail-light"><span>02</span><span>YOUR QUEST</span><i /></div>
+        <div className="console-heading"><div><p className="sq-kicker">A LITTLE MOMENT OF MOMENTUM</p><h2>Make a move.<br /><em>Change the map.</em></h2></div><p>Progress isn't finishing everything. It's doing the next useful thing.</p></div>
+        <div className="quest-console-grid">
+          <div className="quest-panel">
+            <div className="panel-top"><span>ACTIVE QUEST</span><span className={started ? "quest-chip active" : "quest-chip"}>{started ? "IN PLAY" : "READY WHEN YOU ARE"}</span></div>
+            <div className="quest-title-row"><div className="quest-emblem">✳</div><div><span className="task-subject">{subject.toUpperCase()}</span><h3>{started ? task : "Your first small step"}</h3></div></div>
+            <p className="quest-prompt">{started ? "Here's a way into it. Check off each move as you go. You can adapt the plan to fit your actual assignment." : "Build your quest above, then come back here. Or use this starter plan to get moving now."}</p>
+            <div className="step-list">{steps.map((step, index) => <button key={step.icon} className={done.includes(index) ? "quest-step step-done" : "quest-step"} onClick={() => setDone((old) => old.includes(index) ? old.filter((n) => n !== index) : [...old, index])}><span className="step-check">{done.includes(index) ? "✓" : step.icon}</span><span className="step-words"><b>{step.title}</b><small>{step.detail}</small></span><span className="step-arrow">{done.includes(index) ? "DONE" : "＋"}</span></button>)}</div>
+            <div className="quest-progress-label"><span>YOUR MOMENTUM</span><span>{completed} OF 3 MOVES</span></div><div className="quest-progress-track"><span style={{ width: `${completed / 3 * 100}%` }} /></div>
+            {completed === 3 && <div className="completion-note" role="status"><span>✦</span><div><b>Quest checkpoint reached.</b><p>You made space for the work. Choose your next question when you're ready.</p></div></div>}
+          </div>
+          <div className="timer-panel">
+            <div className="timer-top"><span>THE FIVE-MINUTE START</span><span>FOCUS MODE</span></div>
+            <p className="timer-intro">No pressure to finish.<br />Just give it five minutes.</p>
+            <div className={seconds === 0 ? "timer-dial timer-finished" : "timer-dial"}><div className="timer-ring" /><span className="timer-time">{clock}</span><span className="timer-caption">{seconds === 0 ? "TIME WELL SPENT" : running ? "ONE THING AT A TIME" : "WHEN YOU'RE READY"}</span></div>
+            <div className="timer-actions"><button className="timer-main" onClick={() => { if (seconds === 0) setSeconds(300); setRunning((v) => seconds === 0 ? true : !v); }}>{seconds === 0 ? "Start another round ↗" : running ? "Pause the clock Ⅱ" : seconds === 300 ? "Start five minutes ↗" : "Keep going ↗"}</button><button className="timer-reset" onClick={() => { setRunning(false); setSeconds(300); }}>Reset</button></div>
+            <p className="timer-footnote">{seconds === 0 ? "You showed up. That counts." : "Put one problem in front of you. Let the rest wait."}</p>
+          </div>
         </div>
-        <div className="story-chapters">
-          {chapters.map((item) => <article className="story-chapter" data-chapter={item.id} key={item.id}><span className="chapter-index">0{item.id + 1} ,  {item.label}</span><h2>{item.title}</h2><p>{item.copy}</p><div className="chapter-note"><span>✳</span>{item.note}</div></article>)}
-        </div>
       </section>
 
-      <section className="research-section" id="research">
-        <div className="section-label reveal"><span>02, THE EVIDENCE</span><span>THE RESEARCH, NOT THE HYPE</span></div>
-        <div className="research-intro reveal"><p className="eyebrow">CAN GAME DESIGN SUPPORT LEARNING?</p><h2>There’s a reason to explore it.<br /><em>Not a guarantee.</em></h2><p>A meta-analysis found a positive average effect on academic performance. The useful question is how game elements are designed, and whether they support learning instead of competing with it.</p></div>
-        <div className="research-panel reveal">
-          <div className="research-number"><span className="number-label">A 2024 META-ANALYSIS</span><strong>22</strong><span className="number-caption">experimental studies reviewed</span></div>
-          <div className="research-detail"><div className="evidence-stamp"><span>OVERALL FINDING</span><strong>Positive effect</strong><i>Across the studies reviewed</i></div><p>A 2024 meta-analysis by Zeng and colleagues combined 22 experimental studies involving 3,144 participants. It reported a positive overall effect on academic performance (Hedges’ g = 0.782). Results varied across studies, so this is evidence worth exploring, not proof that every game will help every learner.</p><a className="source-link" href="https://doi.org/10.1111/bjet.13471" target="_blank" rel="noreferrer">Read the published research <span>↗</span></a></div>
-        </div>
-        <div className="research-bottom reveal"><span className="research-star">✳</span><p><strong>Our principle:</strong> the game should make learning easier to approach, not become another distraction from learning.</p></div>
+      <section className="sq-research" id="why">
+        <div className="section-rail"><span>03</span><span>THE THINKING BEHIND IT</span><i /></div>
+        <div className="research-grid"><div><p className="sq-kicker">GAME DESIGN, WITH A PURPOSE</p><h2>Make the next step<br /><em>easier to see.</em></h2><p className="research-lede">Game elements can help make goals and progress visible. But they only matter when they support the learning itself.</p><a className="research-citation" href="https://doi.org/10.1111/bjet.13471" target="_blank" rel="noreferrer"><span>READ THE RESEARCH</span><b>Zeng et al. · 2024 meta-analysis ↗</b></a></div><div className="research-card"><div className="research-card-top"><span>RESEARCH NOTE 001</span><span>EDUCATIONAL GAMIFICATION</span></div><strong className="research-number">22</strong><h3>experimental studies reviewed</h3><div className="research-rule" /><p>A 2024 meta-analysis reported a positive overall effect of gamification on academic performance. The studies differed, so this is a reason to explore thoughtful design, not a guarantee that every game works for every student.</p><div className="research-card-foot"><span>LEARNING FIRST</span><span>PROGRESS WITH PURPOSE ✳</span></div></div></div>
       </section>
 
-      <section className="quest-section" id="quest">
-        <div className="section-label reveal"><span>03, THE IDEA</span><span>LEARNING AS PROGRESSION</span></div>
-        <div className="quest-heading reveal"><div><p className="eyebrow">A CLEARER WAY TO BEGIN</p><h2>One step is still<br /><em>forward.</em></h2></div><p>Turn a vague “I need to study” into one concrete action. Then give yourself a chance to do it.</p></div>
-        <div className="quest-map reveal"><div className="map-header"><span>YOUR LEARNING PATH</span><span>YOUR NEXT THREE MOVES</span></div><div className="map-canvas"><div className="map-line" /><div className="map-node node-start"><span>01</span><b>BEGIN</b><small>Choose one task</small></div><div className="map-node node-middle"><span>02</span><b>PRACTICE</b><small>Build understanding</small></div><div className="map-node node-end"><span>03</span><b>ADVANCE</b><small>Take the next step</small></div><div className="map-annotation">YOU DON'T NEED TO SEE THE WHOLE PATH TO BEGIN.</div></div><div className="map-footer"><span>DESIGNED AROUND SMALLER STEPS</span><span>ONE STEP AT A TIME</span></div></div>
-        <div className="principle-row reveal"><span className="principle-symbol">↗</span><div><h3>Keep the learning at the center.</h3><p>Points, levels, and progress only matter if they help you learn. A game should reward the work, not replace it.</p></div></div>
-      </section>
-
-      <section className="project-section" id="project"><div className="project-orbit" aria-hidden="true"><span /><span /><span /></div><div className="project-content reveal"><p className="eyebrow">WHY THIS MATTERS</p><h2>Less stuck at the start.<br /><em>More room to learn.</em></h2><p>Studying can feel difficult before the learning even begins. StudyQuest asks a simple question: what if the next useful step felt easier to see, and easier to take?</p><a className="button button-light" href="#top">Return to the beginning <span>↑</span></a></div><footer className="site-footer"><a className="wordmark wordmark-light" href="#top"><span className="wordmark-mark">s<span>q</span></span><span>studyquest</span></a><span>Make a start. Find your rhythm.</span><a href="https://www.congressionalappchallenge.us/" target="_blank" rel="noreferrer">Congressional App Challenge ↗</a><span>© 2026 StudyQuest</span></footer></section>
+      <footer className="sq-footer"><a className="sq-brand footer-brand" href="#home"><span className="sq-brand-icon">s<span>q</span></span><span>studyquest</span></a><p>Start where you are. The next step is enough.</p><a href="#home">BACK TO THE BEGINNING ↑</a></footer>
     </main>
   );
 }
