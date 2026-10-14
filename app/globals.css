@@ -102,3 +102,36 @@ body{background:var(--sq-paper);color:var(--sq-ink);font-family:"Avenir Next",Av
 @keyframes loader-appear{from{opacity:0}to{opacity:1}}@keyframes quest-pulse{0%,100%{transform:scale(.8);opacity:.65}50%{transform:scale(1.2);opacity:1}}@keyframes spark-drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @media(max-width:650px){.game-loader{padding:16px 18px 12px}.loader-top{font-size:9px}.loader-version{font-size:7px;letter-spacing:.8px}.loader-scene{height:225px;min-height:190px;margin-top:15px}.loader-window{width:80px;height:98px;border-width:5px}.loader-bottom{grid-template-columns:1fr;gap:20px;margin-top:14px}.loader-bottom h2{font-size:40px}.loader-copy{font-size:12px}.loader-footer{font-size:7px;letter-spacing:.8px}.loader-paper{right:8%;transform:scale(.78) rotate(4deg);transform-origin:bottom right}.loader-pencil{right:15%;width:75px}.loader-shelf{left:6%;right:6%}.book-one{left:13%}.book-two{left:19%}.book-three{left:25%}.spark-one{left:9%}.spark-two{right:8%}}
 @media(prefers-reduced-motion:reduce){.loader-path span,.loader-spark,.game-loader{animation:none}}
+
+
+/* A more grounded study-desk illustration, built from simple shapes rather than a fantasy map. */
+.sq-world{height:640px;background:#e5ddcc;overflow:hidden;box-shadow:14px 14px 0 #e8e0d1}
+.sq-world:after{display:none}
+.desk-wall{position:absolute;inset:0 0 36%;background:#d8dfd1}
+.desk-window{position:absolute;top:9%;left:10%;width:39%;height:65%;border:8px solid #294737;background:linear-gradient(145deg,#e9e5d4,#b5c8b2);box-shadow:inset 0 0 0 1px rgba(32,61,50,.12)}
+.desk-window:before,.desk-window:after{content:"";position:absolute;background:#294737}
+.desk-window:before{top:0;bottom:0;left:52%;width:7px}
+.desk-window:after{left:0;right:0;top:53%;height:7px}
+.desk-window span{position:absolute;width:70px;height:70px;border-radius:50%;background:#e8c98e;right:15%;top:13%;opacity:.9}
+.desk-shelf{position:absolute;right:0;top:21%;width:31%;height:9px;background:#6e6048;box-shadow:0 5px 0 rgba(41,42,38,.08)}
+.desk-shelf i{position:absolute;bottom:9px;left:8%;width:17px;height:64px;background:#b8754e}
+.desk-shelf i:nth-child(2){left:29%;height:52px;background:#e0b76d}
+.desk-shelf i:nth-child(3){left:50%;height:71px;background:#55745b}
+.desk-shelf i:nth-child(4){left:70%;height:58px;background:#b5a084}
+.desk-note{position:absolute;right:9%;top:43%;padding:14px 16px;background:#f2dca8;color:#4d503e;font:italic 14px/1.55 Georgia,serif;transform:rotate(3deg);box-shadow:2px 5px 10px rgba(41,42,38,.1)}
+.desk-pin{position:absolute;top:39%;right:17%;font-size:15px;color:#a36f3f}
+.desk-surface{position:absolute;left:-6%;right:-6%;height:43%;bottom:-2%;background:linear-gradient(160deg,#9a704d,#78543c);transform:rotate(-2deg);box-shadow:0 -8px 0 rgba(41,42,38,.08)}
+.desk-book{position:absolute;bottom:22%;width:46%;height:55%;box-shadow:5px 8px 0 rgba(35,36,29,.13)}
+.book-under{left:22%;background:#c6b69a;transform:rotate(7deg)}
+.book-top{left:18%;bottom:25%;padding:26px 24px;background:#f7f0df;color:#53624c;transform:rotate(-6deg);font:10px/1.5 "Trebuchet MS",sans-serif}
+.book-top span{font-size:9px;letter-spacing:2px}
+.book-top i{display:block;height:3px;width:78%;margin-top:15px;background:#c6cbbd}
+.book-top i:nth-of-type(2){width:91%}.book-top i:nth-of-type(3){width:62%}.book-top i:nth-of-type(4){width:82%}
+.book-top b{display:block;margin-top:16px;font:italic 17px Georgia,serif;color:#b17a45}
+.desk-pencil{position:absolute;left:56%;bottom:29%;width:31%;height:8px;background:#d5a34f;transform:rotate(-24deg);box-shadow:0 2px 0 rgba(35,36,29,.13)}
+.desk-pencil:after{content:"";position:absolute;right:-9px;border-left:10px solid #e8d8b8;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.desk-cup{position:absolute;right:12%;bottom:27%;width:62px;height:66px;border-radius:6px 6px 22px 22px;background:#e7e0cf;box-shadow:5px 7px 0 rgba(35,36,29,.13);transform:rotate(3deg)}
+.desk-cup:after{content:"";position:absolute;right:-18px;top:13px;width:23px;height:28px;border:7px solid #e7e0cf;border-left:0;border-radius:0 18px 18px 0}
+.desk-cup span{position:absolute;top:8px;left:5px;right:5px;height:5px;border-radius:50%;background:#8e6546}
+.desk-caption{position:absolute;left:8%;right:8%;bottom:10%;display:flex;justify-content:space-between;color:#f5f0e6;font-size:8px;letter-spacing:1.4px}
+@media(max-width:560px){.sq-world{height:420px}.desk-window{border-width:6px}.desk-note{font-size:11px;padding:9px 10px}.desk-book{width:50%}.book-top{padding:18px 15px}.desk-cup{transform:scale(.8);transform-origin:bottom right;right:9%}.desk-caption{font-size:6px;letter-spacing:.8px}}
