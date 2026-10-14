@@ -21,7 +21,7 @@ const chapters = [
     id: 2,
     label: "THE QUEST TAKES SHAPE",
     title: "Let progress become visible.",
-    copy: "StudyQuest explores how game-inspired progression could make academic practice feel more approachable—without letting the game get in the way of learning.",
+    copy: "StudyQuest explores how game-inspired progression could make academic practice feel more approachable / without letting the game get in the way of learning.",
     note: "The concept is being built. The learning still comes first.",
   },
 ];
@@ -31,6 +31,12 @@ export default function Home() {
   const [chapter, setChapter] = useState(0);
   const [choice, setChoice] = useState<"later" | "start" | null>(null);
   const [questStarted, setQuestStarted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const introTimer = window.setTimeout(() => setIsLoading(false), 1900);
+    return () => window.clearTimeout(introTimer);
+  }, []);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -56,11 +62,19 @@ export default function Home() {
 
   return (
     <main className={`site-shell chapter-${chapter}`}>
+      <div className={"intro-loader " + (isLoading ? "intro-loader-active" : "intro-loader-exit")} aria-hidden={!isLoading}>
+        <div className="loader-mark">s<span>q</span></div>
+        <div className="loader-world" aria-hidden="true"><span className="loader-orbit orbit-a" /><span className="loader-orbit orbit-b" /><span className="loader-core" /><span className="loader-point point-a" /><span className="loader-point point-b" /><span className="loader-point point-c" /></div>
+        <p className="loader-kicker">A SMALL STEP CHANGES THE MAP</p>
+        <h2>Find your <em>starting point.</em></h2>
+        <div className="loader-track"><span /></div>
+        <button className="loader-skip" onClick={() => setIsLoading(false)} tabIndex={isLoading ? 0 : -1}>Enter StudyQuest <span>↗</span></button>
+      </div>
       <div className="reading-progress" aria-hidden="true"><span style={{ transform: `scaleX(${progress / 100})` }} /></div>
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="StudyQuest home"><span className="wordmark-mark">s<span>q</span></span><span>studyquest</span></a>
         <nav aria-label="Main navigation"><a href="#friction">The feeling</a><a href="#research">The evidence</a><a href="#quest">The idea</a></nav>
-        <a className="header-cta" href="#project">A student-built project <span>↗</span></a>
+        <a className="header-cta" href="#quest">Find your next step <span>↗</span></a>
       </header>
 
       <section className="hero" id="top">
@@ -70,7 +84,7 @@ export default function Home() {
           <h1>The hardest level is often <em>getting started.</em></h1>
           <p className="hero-description">That moment when you know you should study, but somehow everything else feels easier. StudyQuest is exploring a different way into that moment.</p>
           <div className="hero-actions"><a className="button button-dark" href="#friction">Enter the story <span>↓</span></a><a className="text-link" href="#research">See what research says <span>↗</span></a></div>
-          <p className="hero-disclaimer">Student-built for the Congressional App Challenge · Concept in progress</p>
+          <p className="hero-disclaimer">A learning game in the making <span>·</span> Start small. Keep going.</p>
         </div>
         <div className="hero-visual" aria-label="Illustration of a study desk becoming a game path">
           <div className="hero-scene">
@@ -92,7 +106,7 @@ export default function Home() {
 
       <section className="friction-section" id="friction">
         <div className="section-label reveal"><span>01 / THE FAMILIAR FEELING</span><span>THE MOMENT BEFORE YOU BEGIN</span></div>
-        <div className="friction-intro reveal"><p className="eyebrow">YOU KNOW THE LOOP</p><h2>“I’ll start in<br /><em>five minutes.”</em></h2><p>And then five minutes becomes twenty. Not because you don’t care, necessarily—but because the first step can feel much bigger than it is.</p></div>
+        <div className="friction-intro reveal"><p className="eyebrow">YOU KNOW THE LOOP</p><h2>“I’ll start in<br /><em>five minutes.”</em></h2><p>And then five minutes becomes twenty. Not because you don’t care, necessarily / but because the first step can feel much bigger than it is.</p></div>
         <div className="choice-stage reveal">
           <div className="choice-copy"><span className="stage-number">A SMALL INTERACTIVE MOMENT</span><h3>Your assignment is waiting.</h3><p>You have a chapter to review. You don’t need to finish it right now. You just need to choose what happens next.</p></div>
           <div className="choice-card">
@@ -100,7 +114,7 @@ export default function Home() {
             <div className="quest-paper"><span className="paper-overline">STUDY TASK / 01</span><strong>Review one chapter</strong><span className="quest-detail">Estimated task: feels enormous</span><div className="task-scribble" aria-hidden="true">?</div></div>
             <p className="choice-question">What would you do?</p>
             <div className="choice-actions"><button className={choice === "later" ? "choice-button selected" : "choice-button"} onClick={() => { setChoice("later"); setQuestStarted(false); }}><span>↻</span><span><b>Maybe later</b><small>Keep the whole task in your head</small></span></button><button className={choice === "start" ? "choice-button selected" : "choice-button"} onClick={() => { setChoice("start"); setQuestStarted(true); }}><span>↗</span><span><b>Start with one question</b><small>Make the first step smaller</small></span></button></div>
-            {choice && <div className={`choice-feedback ${choice}`} aria-live="polite">{choice === "later" ? <><strong>The task is still waiting.</strong><span>That happens. You can change the plan at any time—try shrinking the first step instead of judging yourself.</span></> : <><strong>{questStarted ? "Quest started: one question." : "Ready when you are."}</strong><span>You haven't finished the chapter. You've done something more useful for this moment: you've made a beginning.</span><span className="mini-progress"><i /></span></>}</div>}
+            {choice && <div className={`choice-feedback ${choice}`} aria-live="polite">{choice === "later" ? <><strong>The task is still waiting.</strong><span>That happens. You can change the plan at any time / try shrinking the first step instead of judging yourself.</span></> : <><strong>{questStarted ? "Quest started: one question." : "Ready when you are."}</strong><span>You haven't finished the chapter. You've done something more useful for this moment: you've made a beginning.</span><span className="mini-progress"><i /></span></>}</div>}
           </div>
         </div>
         <p className="small-note reveal">This interaction is an illustration of breaking down a task, not a test of your habits or a promise that one approach works for everyone.</p>
@@ -112,18 +126,18 @@ export default function Home() {
           <div className="story-overlay"><span>STUDYQUEST / THE JOURNEY</span><span>SCROLL TO MOVE THROUGH THE IDEA</span></div>
         </div>
         <div className="story-chapters">
-          {chapters.map((item) => <article className="story-chapter" data-chapter={item.id} key={item.id}><span className="chapter-index">0{item.id + 1} — {item.label}</span><h2>{item.title}</h2><p>{item.copy}</p><div className="chapter-note"><span>✳</span>{item.note}</div></article>)}
+          {chapters.map((item) => <article className="story-chapter" data-chapter={item.id} key={item.id}><span className="chapter-index">0{item.id + 1}  /  {item.label}</span><h2>{item.title}</h2><p>{item.copy}</p><div className="chapter-note"><span>✳</span>{item.note}</div></article>)}
         </div>
       </section>
 
       <section className="research-section" id="research">
         <div className="section-label reveal"><span>02 / THE EVIDENCE</span><span>THE RESEARCH, NOT THE HYPE</span></div>
-        <div className="research-intro reveal"><p className="eyebrow">CAN GAME DESIGN SUPPORT LEARNING?</p><h2>There’s a reason to explore it.<br /><em>Not a guarantee.</em></h2><p>Research on gamified learning has found positive overall effects in some settings. That is a reason to investigate thoughtful design—not a promise that every educational game works.</p></div>
+        <div className="research-intro reveal"><p className="eyebrow">CAN GAME DESIGN SUPPORT LEARNING?</p><h2>There’s a reason to explore it.<br /><em>Not a guarantee.</em></h2><p>Research on gamified learning has found positive overall effects in some settings. That is a reason to investigate thoughtful design / not a promise that every educational game works.</p></div>
         <div className="research-panel reveal">
           <div className="research-number"><span className="number-label">A 2024 META-ANALYSIS</span><strong>22</strong><span className="number-caption">experimental studies reviewed</span></div>
-          <div className="research-detail"><div className="evidence-stamp"><span>OVERALL FINDING</span><strong>Positive effect</strong><i>Across the studies reviewed</i></div><p>A 2024 meta-analysis by Zeng and colleagues combined 22 experimental studies and reported a positive overall effect of gamification on academic performance. The studies varied, and this does not prove that every game—or StudyQuest specifically—will improve learning.</p><a className="source-link" href="https://doi.org/10.1111/bjet.13471" target="_blank" rel="noreferrer">Read the published research <span>↗</span></a></div>
+          <div className="research-detail"><div className="evidence-stamp"><span>OVERALL FINDING</span><strong>Positive effect</strong><i>Across the studies reviewed</i></div><p>A 2024 meta-analysis by Zeng and colleagues combined 22 experimental studies and reported a positive overall effect of gamification on academic performance. The studies varied, and this does not prove that every game / or StudyQuest specifically / will improve learning.</p><a className="source-link" href="https://doi.org/10.1111/bjet.13471" target="_blank" rel="noreferrer">Read the published research <span>↗</span></a></div>
         </div>
-        <div className="research-bottom reveal"><span className="research-star">✳</span><p><strong>Our principle:</strong> the game should make learning easier to approach—not become another distraction from learning.</p></div>
+        <div className="research-bottom reveal"><span className="research-star">✳</span><p><strong>Our principle:</strong> the game should make learning easier to approach / not become another distraction from learning.</p></div>
       </section>
 
       <section className="quest-section" id="quest">
@@ -133,7 +147,7 @@ export default function Home() {
         <div className="principle-row reveal"><span className="principle-symbol">↗</span><div><h3>Keep the learning at the center.</h3><p>Points, levels, and visual progress only matter if they support understanding. The goal is not to make studying look like a game; it is to explore whether game design can make it easier to begin and continue.</p></div></div>
       </section>
 
-      <section className="project-section" id="project"><div className="project-orbit" aria-hidden="true"><span /><span /><span /></div><div className="project-content reveal"><p className="eyebrow">A WORK IN PROGRESS, WITH A PURPOSE</p><h2>Less stuck at the start.<br /><em>More room to learn.</em></h2><p>StudyQuest is a student-led project for the Congressional App Challenge. We’re exploring how game-inspired progression might make academic practice feel more approachable. The experience is still being built, and we’ll let the work—not big promises—show what it can become.</p><a className="button button-light" href="#top">Return to the beginning <span>↑</span></a></div><footer className="site-footer"><a className="wordmark wordmark-light" href="#top"><span className="wordmark-mark">s<span>q</span></span><span>studyquest</span></a><span>Student-built · In development</span><a href="https://www.congressionalappchallenge.us/" target="_blank" rel="noreferrer">Congressional App Challenge ↗</a><span>© 2026 StudyQuest</span></footer></section>
+      <section className="project-section" id="project"><div className="project-orbit" aria-hidden="true"><span /><span /><span /></div><div className="project-content reveal"><p className="eyebrow">A WORK IN PROGRESS, WITH A PURPOSE</p><h2>Less stuck at the start.<br /><em>More room to learn.</em></h2><p>StudyQuest is a student-led project for the Congressional App Challenge. We’re exploring how game-inspired progression might make academic practice feel more approachable. The experience is still being built, and we’ll let the work / not big promises / show what it can become.</p><a className="button button-light" href="#top">Return to the beginning <span>↑</span></a></div><footer className="site-footer"><a className="wordmark wordmark-light" href="#top"><span className="wordmark-mark">s<span>q</span></span><span>studyquest</span></a><span>Student-built · In development</span><a href="https://www.congressionalappchallenge.us/" target="_blank" rel="noreferrer">Congressional App Challenge ↗</a><span>© 2026 StudyQuest</span></footer></section>
     </main>
   );
 }
