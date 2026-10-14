@@ -43,12 +43,12 @@ export default function Home() {
       <section className="sq-hero" id="home">
         <div className="sq-hero-copy">
           <div className="sq-kicker"><span className="live-dot" /> YOUR NEXT CHAPTER STARTS HERE</div>
-          <h1>Don't conquer<br />the whole mountain.<br /><em>Take the first step.</em></h1>
+          <h1>You don't need<br />the whole plan.<br /><em>Just the next move.</em></h1>
           <p className="sq-lede">That assignment you've been putting off? It doesn't have to be finished right now. It just has to become something you can start.</p>
           <a className="sq-primary" href="#start">Choose your first move <span>↘</span></a>
           <div className="sq-hero-foot"><span>01 / BEGIN</span><span>SMALL STEPS COUNT</span></div>
         </div>
-        <div className="sq-world" aria-label="Illustrated study landscape with a path leading toward a lit window">
+        <div className="sq-world" aria-label="Illustrated study world with a path leading toward a lit window">
           <div className="world-sky"><span className="world-star star-a">✳</span><span className="world-star star-b">·</span><span className="world-star star-c">✦</span><div className="world-moon" /></div>
           <div className="world-window"><div className="window-glow" /><div className="window-cross cross-v" /><div className="window-cross cross-h" /></div>
           <div className="world-hill hill-back" /><div className="world-hill hill-mid" /><div className="world-hill hill-front" />
@@ -56,7 +56,7 @@ export default function Home() {
           <div className="world-marker marker-one"><span>YOU ARE HERE</span><b>Start small</b></div>
           <div className="world-marker marker-two"><span>YOUR NEXT STOP</span><b>One question</b></div>
           <div className="world-sign">NO NEED TO<br /><strong>SEE IT ALL.</strong></div>
-          <div className="world-coordinates">STUDYQUEST FIELD NOTES <span>001</span></div>
+          <div className="world-coordinates">YOUR QUEST MAP <span>001</span></div>
         </div>
       </section>
 
