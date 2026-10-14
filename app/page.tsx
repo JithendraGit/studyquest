@@ -63,15 +63,20 @@ export default function Home() {
           <a className="sq-primary" href="#start">Choose your first move <span>↘</span></a>
           <div className="sq-hero-foot"><span>01 / BEGIN</span><span>SMALL STEPS COUNT</span></div>
         </div>
-        <div className="sq-world" aria-label="Illustrated study world with a path leading toward a lit window">
-          <div className="world-sky"><span className="world-star star-a">✳</span><span className="world-star star-b">·</span><span className="world-star star-c">✦</span><div className="world-moon" /></div>
-          <div className="world-window"><div className="window-glow" /><div className="window-cross cross-v" /><div className="window-cross cross-h" /></div>
-          <div className="world-hill hill-back" /><div className="world-hill hill-mid" /><div className="world-hill hill-front" />
-          <svg className="world-path" viewBox="0 0 600 650" preserveAspectRatio="none" aria-hidden="true"><path d="M295 650 C260 580 390 555 340 500 S180 430 260 370 S420 300 350 250 S250 185 300 120" /><circle cx="295" cy="650" r="7" /><circle cx="340" cy="500" r="7" /><circle cx="260" cy="370" r="7" /><circle cx="350" cy="250" r="7" /><circle cx="300" cy="120" r="9" /></svg>
-          <div className="world-marker marker-one"><span>YOU ARE HERE</span><b>Start small</b></div>
-          <div className="world-marker marker-two"><span>YOUR NEXT STOP</span><b>One question</b></div>
-          <div className="world-sign">YOUR STUDY PATH<br /><strong>ONE STEP AT A TIME.</strong></div>
-          <div className="world-coordinates">YOUR QUEST MAP <span>001</span></div>
+        <div className="sq-world" aria-label="A quiet study desk with an open notebook, pencil, and a cup">
+          <div className="desk-wall">
+            <span className="desk-note">MONDAY<br />finish the<br />last 3 questions</span>
+            <div className="desk-shelf"><i /><i /><i /><i /></div>
+            <div className="desk-window"><span /></div>
+            <span className="desk-pin">✳</span>
+          </div>
+          <div className="desk-surface">
+            <div className="desk-book book-under" />
+            <div className="desk-book book-top"><span>NOTES</span><i /><i /><i /><i /><b>keep going</b></div>
+            <div className="desk-pencil" />
+            <div className="desk-cup"><span /></div>
+            <div className="desk-caption"><span>TONIGHT'S PLAN</span><span>JUST START WITH ONE</span></div>
+          </div>
         </div>
       </section>
 
