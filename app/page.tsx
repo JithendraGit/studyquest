@@ -34,7 +34,7 @@ export default function Home() {
   useEffect(() => {
     const updateProgress = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? Math.min(100, Math.round((window.scrollY, max) * 100)) : 0);
+      setProgress(max > 0 ? Math.min(100, Math.round((window.scrollY / max) * 100)) : 0);
     };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
