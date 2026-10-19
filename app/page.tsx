@@ -1,19 +1,90 @@
+"use client";
+
+import { useState } from "react";
+
+const team = [
+  {
+    name: "Nathan Jithendra",
+    role: "Co-creator",
+    code: "PLAYER_01",
+    bio: "Working on the StudyQuest website and bringing the project experience together.",
+    symbol: "NJ",
+  },
+  {
+    name: "Leon Yuan",
+    role: "Co-creator",
+    code: "PLAYER_02",
+    bio: "Working with the team to build the StudyQuest learning game.",
+    symbol: "LY",
+  },
+];
+
 export default function Home() {
+  const [activeMember, setActiveMember] = useState<number | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
+
   return (
     <main className="page">
       <div className="content">
-        <p className="eyebrow">A STUDENT-BUILT PROJECT</p>
+        <p className="eyebrow"><span className="status-dot" /> A STUDENT-BUILT PROJECT</p>
         <h1>StudyQuest<span>.</span></h1>
+        <p className="tagline">LEARN. PLAY. PROGRESS.</p>
         <div className="accent-line" aria-hidden="true" />
+
         <section className="about" aria-labelledby="about-title">
-          <h2 id="about-title">ABOUT</h2>
+          <h2 id="about-title"><span className="section-index">01</span> ABOUT</h2>
           <p>
-            StudyQuest is a learning game designed to make studying feel more
+            StudyQuest is a learning game designed to make studying more
             engaging. We’re building an experience where students can practice
             what they’re learning and make progress through gameplay.
           </p>
         </section>
-        <p className="footer-note">LEARN · PLAY · PROGRESS</p>
+
+        <section className="team" aria-labelledby="team-title">
+          <div className="section-heading">
+            <h2 id="team-title"><span className="section-index">02</span> THE TEAM</h2>
+            <span className="section-meta">2 MEMBERS</span>
+          </div>
+          <p className="team-intro">Meet the people behind the project. Select a profile to see more.</p>
+          <div className="team-grid">
+            {team.map((member, index) => (
+              <button
+                type="button"
+                className={activeMember === index ? "member-card selected" : "member-card"}
+                key={member.code}
+                onClick={() => setActiveMember(activeMember === index ? null : index)}
+                aria-expanded={activeMember === index}
+              >
+                <span className="member-top"><span>{member.code}</span><span className="member-indicator">{activeMember === index ? "−" : "+"}</span></span>
+                <span className="member-avatar" aria-hidden="true">{member.symbol}</span>
+                <span className="member-name">{member.name}</span>
+                <span className="member-role">{member.role}</span>
+                <span className="member-action">{activeMember === index ? "CLOSE PROFILE" : "VIEW PROFILE ↗"}</span>
+              </button>
+            ))}
+          </div>
+          {activeMember !== null && (
+            <div className="profile-detail" role="region" aria-live="polite" aria-label={team[activeMember].name + " profile"}>
+              <span className="detail-label">PROFILE_LOADED</span>
+              <h3>{team[activeMember].name}</h3>
+              <p>{team[activeMember].bio}</p>
+            </div>
+          )}
+        </section>
+
+        <div className="more-wrap">
+          <button className="details-toggle" type="button" onClick={() => setShowDetails(!showDetails)} aria-expanded={showDetails}>
+            <span>{showDetails ? "− HIDE PROJECT STATUS" : "+ PROJECT STATUS"}</span>
+            <span>{showDetails ? "CLOSE" : "OPEN"}</span>
+          </button>
+          {showDetails && (
+            <div className="status-panel">
+              <p><span className="status-dot" /> IN DEVELOPMENT</p>
+              <p>StudyQuest is being built by our team. We’re working toward making practice feel more interactive through gameplay.</p>
+            </div>
+          )}
+        </div>
+        <footer className="footer-note"><span>STUDYQUEST / 001</span><span>MADE BY STUDENTS</span></footer>
       </div>
     </main>
   );
