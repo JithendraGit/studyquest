@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "StudyQuest — Make the next step feel possible",
+  title: "StudyQuest",
   description:
-    "StudyQuest is a student-built educational game project exploring how game-inspired progression can make studying feel more approachable.",
+    "StudyQuest is a student-built learning game designed to make studying more engaging through practice and gameplay.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
